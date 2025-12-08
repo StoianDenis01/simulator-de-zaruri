@@ -55,20 +55,19 @@ void comparatieProbTeoretice()
 
 int main()
 {
-    InitWindow(800, 600, "Meniu Simulari Zaruri");
-    Image img = LoadImage("wallpaper.jpg");
+    InitWindow(900, 600, "Meniu Simulari Zaruri");
+    Image img = LoadImage("poza.png");
     Texture2D texture = LoadTextureFromImage(img);
     UnloadImage(img);
 
-
-    Rectangle b1 = { 400-125, 100, 250, 40 };
-    Rectangle b2 = { 400-150, 155, 300, 40 };
-    Rectangle b3 = { 400-90, 210, 180, 40 };
-    Rectangle b4 = { 400-105, 265, 210, 40 };
-    Rectangle b5 = { 400-135, 320, 270, 40 };
-    Rectangle b6 = { 400-97, 375, 195, 40 };
-    Rectangle b7 = { 400-92, 430, 185, 40 };
-    Rectangle b8 = { 400-90, 485, 180, 40 };
+    Rectangle b1 = { 450-125, 100, 250, 40 };
+    Rectangle b2 = { 450-150, 155, 300, 40 };
+    Rectangle b3 = { 450-90, 210, 180, 40 };
+    Rectangle b4 = { 450-105, 265, 210, 40 };
+    Rectangle b5 = { 450-135, 320, 270, 40 };
+    Rectangle b6 = { 450-97, 375, 195, 40 };
+    Rectangle b7 = { 450-92, 430, 185, 40 };
+    Rectangle b8 = { 450-90, 485, 180, 40 };
 
     SetTargetFPS(60);
 
@@ -76,8 +75,8 @@ int main()
     {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-
         DrawTexture(texture, 0, 0, WHITE);
+
 
         DrawText("Alege jocul", 240, 20, 60, BLACK);
 
@@ -91,13 +90,6 @@ int main()
         if (buton(b8, "Comparatie")) comparatieProbTeoretice();
 
         EndDrawing();
-
-        if (rezultat > 0) 
-        {
-            char text[50];
-            sprintf(text, "Ai dat: %d", rezultat);
-            DrawText(text, 350, 550, 30, RED);
-        }
     }
     UnloadTexture(texture);
     CloseWindow();
