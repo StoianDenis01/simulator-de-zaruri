@@ -6,6 +6,7 @@
 int rezultat=0;
 int fete =6;
 int numar_aruncari=2;
+int numar=0;
 
 bool buton(Rectangle rec, const char *text)
 {
@@ -32,13 +33,14 @@ typedef enum {
     COMPARATIE_PROB_TEORICE
 } ScreenState;
 
-void SimulareZaruri(int numar_aruncari,int fete)
+void SimulareZaruri(int numar_aruncari,int fete,int numar)
 {
     rezultat=0;
     srand(time(0));
     for(int i=0;i<numar_aruncari;i++)
     {
-        rezultat+=rand()%fete+1;
+        numar=rand()%fete+1;
+        rezultat+=numar;
     }
 }
 void ProbabilitateSuma()
@@ -88,7 +90,7 @@ int main()
     Rectangle b7 = { 450-92, 430, 185, 40 };
     Rectangle b8 = { 450-90, 485, 180, 40 };
 
-    Rectangle rollBtn = { 350, 300, 250, 50 };
+    Rectangle rollBtn = { 450-125, 200, 250, 50 };
     Rectangle backBtn = { 20, 20, 150, 40 };
 
     Rectangle rollAdd= { 675, 100, 40, 40 };
@@ -105,27 +107,53 @@ int main()
         DrawTexture(texture, 0, 0, WHITE);
 
         if (screen == SCREEN_MENU)
-        {  DrawText("Alege jocul", 240, 20, 60, BLACK);
+        {  DrawText("Alege jocul", 280, 20, 60, BLACK);
 
             if (buton(b1, "Simulare zaruri"))
             {
                 screen = SIMULARE_ZARURI;
             };
-            if (buton(b2, "Probabilitate suma")) ProbabilitateSuma();
-            if (buton(b3, "Joc Craps")) Craps();
-            if (buton(b4, "Joc Yahtzee")) yahtzee();
-            if (buton(b5, "Statistici zaruri")) statisticiZaruri();
-            if (buton(b6, "Salvare log")) salvareLog();
-            if (buton(b7, "Histograma")) histograma();
-            if (buton(b8, "Comparatie")) comparatieProbTeoretice();
+            if (buton(b2, "Probabilitate suma"))
+            {
+                screen = PROBABILITATE_SUMA;
+            };
+            if (buton(b3, "Joc Craps"))
+            {
+                screen = CRAPS;
+            };
+            if (buton(b4, "Joc Yahtzee")) 
+            {
+                screen = YAHTZEE;
+            };
+            if (buton(b5, "Statistici zaruri"))
+            {
+                screen = STATISTICI_ZARURI;
+            };
+            if (buton(b6, "Salvare log"))
+            {
+                screen = SALVARE_LOG;
+            };
+            if (buton(b7, "Histograma"))
+            {
+                screen = HISTOGRAMA;
+            };
+            if (buton(b8, "Comparatie"))
+            {
+                screen = COMPARATIE_PROB_TEORICE;
+            };
         }
         if (screen == SIMULARE_ZARURI)
         {
-                        DrawText("Simulare Zaruri", 230, 40, 60, BLACK);
-
-            DrawText(TextFormat("Rezultat: %d", rezultat), 300, 200, 40, BLACK);
+            DrawText("Simulare Zaruri", 230, 40, 60, BLACK);
+            DrawText(TextFormat("Rezultat: %d", rezultat), 450-125, 270, 40, BLACK);
             DrawText(TextFormat("Numar zaruri: %d", numar_aruncari), 300, 100, 40, BLACK);
             DrawText(TextFormat("Fete zaruri: %d", fete), 300, 150, 40, BLACK);
+            
+
+            for (int i = 0; i < numar_aruncari; i++)
+            {
+                DrawText(TextFormat("Zar %d ,rezultat: %d", i + 1, numar), 450 - 125, 320 + i * 30, 30, DARKGRAY);
+            }
             
             if (buton(rollAdd, "+"))
                 numar_aruncari++;
@@ -140,10 +168,52 @@ int main()
                 fete--;
 
             if (buton(rollBtn, "Da cu zarurile"))
-                SimulareZaruri(numar_aruncari,fete);
+                SimulareZaruri(numar_aruncari,fete,numar);
 
             if (buton(backBtn, "<- Inapoi"))
                 screen = SCREEN_MENU;
+        }
+        if (screen == PROBABILITATE_SUMA)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Probabilitate Suma
+        }
+        if (screen == CRAPS)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Craps
+        }
+        if (screen == YAHTZEE)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Yahtzee
+        }
+        if (screen == STATISTICI_ZARURI)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Statistici Zaruri
+        }
+        if (screen == SALVARE_LOG)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Salvare Log
+        }
+        if (screen == HISTOGRAMA)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Histograma
+        }
+        if (screen == COMPARATIE_PROB_TEORICE)
+        {
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+            // Implementare ecran Comparatie Probabilitati Teoretice
         }
 
         EndDrawing();
