@@ -4,9 +4,16 @@
 #include <time.h>
 
 int rezultat=0;
-int fete =6;
+int fete=6;
 int numar_aruncari=2;
-int numar=0;
+int sumadorita;
+float probabilitate;
+
+int rezultatzar[1000];
+int countrezultat=0;
+
+int ultimezaruri[100];
+int ultimecount=0;
 
 bool buton(Rectangle rec, const char *text)
 {
@@ -33,23 +40,43 @@ typedef enum {
     COMPARATIE_PROB_TEORICE
 } ScreenState;
 
-void SimulareZaruri(int numar_aruncari,int fete,int numar)
+void SimulareZaruri(int numar_aruncari,int fete)
 {
     rezultat=0;
+    ultimecount=0;
     srand(time(0));
+
     for(int i=0;i<numar_aruncari;i++)
     {
-        numar=rand()%fete+1;
-        rezultat+=numar;
+        int val=rand()%fete+1;
+        rezultat+=val;
+
+        ultimezaruri[ultimecount ++]=val;
+        rezultatzar[countrezultat ++]=val;
     }
 }
-void ProbabilitateSuma()
-{ 
-    printf("Probabilitate suma\n"); 
+int combinatiiSuma(int zaruri, int fete, int sumaDorita) {
+    if (zaruri == 0) return (sumaDorita == 0) ? 1 : 0;
+
+    int total = 0;
+    for (int i = 1; i <= fete; i++) {
+        if (sumaDorita - i >= 0)
+            total += combinatiiSuma(zaruri - 1, fete, sumaDorita - i);
+    }
+    return total;
+}
+float calculareaprobabilitatii(int zaruri,int fete,int sumadorita)
+{
+    int totalcombinatii=1;
+    for(int i=0;i<zaruri;i++) totalcombinatii*=fete;
+
+    int combinatiifavorabile = combinatiiSuma(zaruri,fete,sumadorita);
+    return (float)combinatiifavorabile/totalcombinatii;
 }
 void Craps() 
 { 
-    printf("Joc Craps\n"); 
+    printf("Joc Craps\n");
+
 }
 void yahtzee() 
 { 
@@ -93,10 +120,17 @@ int main()
     Rectangle rollBtn = { 450-125, 200, 250, 50 };
     Rectangle backBtn = { 20, 20, 150, 40 };
 
+    Rectangle rolAdd={665,200,40,40};
+    Rectangle rolSub={615,200,40,40};
     Rectangle rollAdd= { 675, 100, 40, 40 };
     Rectangle rollSub= { 625, 100, 40, 40 };
-    Rectangle faceAdd= { 650, 150, 40, 40 };
-    Rectangle faceSub= { 600, 150, 40, 40 };
+    Rectangle faceAdd= { 665, 150, 40, 40 };
+    Rectangle faceSub= { 615, 150, 40, 40 };
+
+    Rectangle prob = {450-215,300,430,50};
+    Rectangle sumAdd = {665,250,40,40};
+    Rectangle sumSub = {615,250,40,40};
+
 
     SetTargetFPS(60);
 
@@ -149,12 +183,6 @@ int main()
             DrawText(TextFormat("Numar zaruri: %d", numar_aruncari), 300, 100, 40, BLACK);
             DrawText(TextFormat("Fete zaruri: %d", fete), 300, 150, 40, BLACK);
             
-
-            for (int i = 0; i < numar_aruncari; i++)
-            {
-                DrawText(TextFormat("Zar %d ,rezultat: %d", i + 1, numar), 450 - 125, 320 + i * 30, 30, DARKGRAY);
-            }
-            
             if (buton(rollAdd, "+"))
                 numar_aruncari++;
 
@@ -168,16 +196,38 @@ int main()
                 fete--;
 
             if (buton(rollBtn, "Da cu zarurile"))
-                SimulareZaruri(numar_aruncari,fete,numar);
+                SimulareZaruri(numar_aruncari,fete);
 
             if (buton(backBtn, "<- Inapoi"))
                 screen = SCREEN_MENU;
         }
-        if (screen == PROBABILITATE_SUMA)
+        if (screen == PROBABILITATE_SUMA) 
         {
+            DrawText("Calcularea Probabilitati \n           Sumei",220,40,50,BLACK);
+            DrawText(TextFormat("Numar zaruri:%d", numar_aruncari), 300, 200, 40, BLACK);
+            DrawText(TextFormat("Fete zaruri:%d", fete), 300, 150, 40, BLACK);
+            DrawText(TextFormat("Suma Dorita:%d",sumadorita),300,250,40,BLACK);
+            DrawText(TextFormat("Probabilitatea Sumei: %.4f",probabilitate),200,350,40,BLACK);
+
+            if (buton(prob,"Ccalculeaza probabilitatea"))
+            {
+                probabilitate=calculareaprobabilitatii(numar_aruncari,fete,sumadorita);
+            }
+            if (buton(rolAdd, "+"))
+                numar_aruncari++;
+            if (buton(rolSub, "-") && numar_aruncari>1)
+                numar_aruncari--;
+            if (buton(sumAdd,"+"))
+                sumadorita++;
+            if (buton(sumSub,"-"))
+                sumadorita--;
+            if (buton(faceAdd,"+"))
+                fete++;
+            if (buton(faceSub, "-"))
+                fete--;
+
             if (buton(backBtn, "<- Inapoi"))
                 screen = SCREEN_MENU;
-            // Implementare ecran Probabilitate Suma
         }
         if (screen == CRAPS)
         {
