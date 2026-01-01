@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+Font font;
+Font titlufont;
+
 int rezultat=0;
 int fete=6;
 int numar_aruncari=2;
@@ -15,18 +18,27 @@ int countrezultat=0;
 int ultimezaruri[100];
 int ultimecount=0;
 
+// Buton modernizat
 bool buton(Rectangle rec, const char *text)
 {
     Vector2 mouse = GetMousePosition();
     bool hover = CheckCollisionPointRec(mouse, rec);
     bool click = hover && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
-    DrawRectangleRec(rec, hover ? LIGHTGRAY : GRAY);
-    DrawRectangleLines(rec.x, rec.y, rec.width, rec.height, BLACK);
-    DrawText(text, rec.x + 10, rec.y + 10, 30, BLACK);
+    Color col = hover ? BLUE : BLACK;
+    DrawRectangleRounded(rec, 0.2f, 30, col);
+    DrawRectangleRoundedLines(rec, 0.2f, 30, WHITE);
+
+    // text centrat
+    int fontSize = 30; // dimensiunea textului pe buton
+    Vector2 textSize = MeasureTextEx(font, text, fontSize, 2);
+    DrawTextEx(font, text, 
+               { rec.x +rec.width/20 - textSize.x/2, rec.y + rec.height/4 - textSize.y/2 },
+               fontSize, 2, WHITE);
 
     return click;
 }
+
 
 typedef enum {
     SCREEN_MENU,
@@ -55,6 +67,7 @@ void SimulareZaruri(int numar_aruncari,int fete)
         rezultatzar[countrezultat ++]=val;
     }
 }
+
 int combinatiiSuma(int zaruri, int fete, int sumaDorita) {
     if (zaruri == 0) return (sumaDorita == 0) ? 1 : 0;
 
@@ -65,6 +78,7 @@ int combinatiiSuma(int zaruri, int fete, int sumaDorita) {
     }
     return total;
 }
+
 float calculareaprobabilitatii(int zaruri,int fete,int sumadorita)
 {
     int totalcombinatii=1;
@@ -73,202 +87,159 @@ float calculareaprobabilitatii(int zaruri,int fete,int sumadorita)
     int combinatiifavorabile = combinatiiSuma(zaruri,fete,sumadorita);
     return (float)combinatiifavorabile/totalcombinatii;
 }
-void Craps() 
-{ 
-    printf("Joc Craps\n");
 
-}
-void yahtzee() 
-{ 
-    printf("Joc Yahtzee\n"); 
-}
-void statisticiZaruri() 
-{ 
-    printf("Statistici zaruri\n"); 
-}
-void salvareLog() 
-{ 
-    printf("Salvare log\n"); 
-}
-void histograma() 
-{ 
-    printf("Histograma\n"); 
-}
-void comparatieProbTeoretice() 
-{ 
-    printf("Comparatie probabilitati teoretice\n"); 
-}
+void Craps() { printf("Joc Craps\n"); }
+void yahtzee() { printf("Joc Yahtzee\n"); }
+void statisticiZaruri() { printf("Statistici zaruri\n"); }
+void salvareLog() { printf("Salvare log\n"); }
+void histograma() { printf("Histograma\n"); }
+void comparatieProbTeoretice() { printf("Comparatie probabilitati teoretice\n"); }
 
 int main()
 {
-    InitWindow(900, 600, "Meniu Simulari Zaruri");
-    Image img = LoadImage("poza.png");
+    InitWindow(900, 690, "Meniu Simulari Zaruri");
+    SetTargetFPS(60);
+
+    font = LoadFontEx("assets/Inter-Regular.ttf", 48, 0, 0);
+    titlufont = LoadFontEx("assets/Inter-Bold.ttf", 72, 0, 0);
+    SetTextureFilter(font.texture, TEXTURE_FILTER_BILINEAR);
+    SetTextureFilter(titlufont.texture, TEXTURE_FILTER_BILINEAR);
+
+    Image img = LoadImage("assets/poza.png");
     Texture2D texture = LoadTextureFromImage(img);
     UnloadImage(img);
 
     ScreenState screen = SCREEN_MENU;
 
-    Rectangle b1 = { 450-125, 100, 250, 40 };
-    Rectangle b2 = { 450-150, 155, 300, 40 };
-    Rectangle b3 = { 450-90, 210, 180, 40 };
-    Rectangle b4 = { 450-105, 265, 210, 40 };
-    Rectangle b5 = { 450-135, 320, 270, 40 };
-    Rectangle b6 = { 450-97, 375, 195, 40 };
-    Rectangle b7 = { 450-92, 430, 185, 40 };
-    Rectangle b8 = { 450-90, 485, 180, 40 };
+    Rectangle b1 = { 450-125, 100, 250, 50};
+    Rectangle b2 = { 450-150, 165, 300, 50 };
+    Rectangle b3 = { 450-90, 230, 180, 50 };
+    Rectangle b4 = { 450-105, 295, 210, 50 };
+    Rectangle b5 = { 450-135, 360, 270, 50 };
+    Rectangle b6 = { 450-97, 425, 195, 50 };
+    Rectangle b7 = { 450-92, 490, 185, 50 };
+    Rectangle b8 = { 450-90, 555, 180, 50 };
 
-    Rectangle rollBtn = { 450-125, 200, 250, 50 };
-    Rectangle backBtn = { 20, 20, 150, 40 };
+    Rectangle rollBtn = { 450-125, 300, 250, 60 };
+    Rectangle backBtn = { 20, 20, 150, 50 };
 
-    Rectangle rolAdd={665,200,40,40};
-    Rectangle rolSub={615,200,40,40};
     Rectangle rollAdd= { 675, 100, 40, 40 };
     Rectangle rollSub= { 625, 100, 40, 40 };
-    Rectangle faceAdd= { 665, 150, 40, 40 };
-    Rectangle faceSub= { 615, 150, 40, 40 };
+    Rectangle face6= { 585, 150, 40, 40 };
+    Rectangle face8= { 635, 150, 40, 40 };
+    Rectangle face10= { 685, 150, 40, 40 };
+    Rectangle face12= { 735, 150, 40, 40 };
+    Rectangle face20= { 785, 150, 40, 40 };
 
     Rectangle prob = {450-215,300,430,50};
-    Rectangle sumAdd = {665,250,40,40};
-    Rectangle sumSub = {615,250,40,40};
-
-
-    SetTargetFPS(60);
+    Rectangle sumAdd = {675,200,40,40};
+    Rectangle sumSub = {625,200,40,40};
 
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(RAYWHITE);
+
+        // Fundal imagine + overlay
         DrawTexture(texture, 0, 0, WHITE);
+        DrawRectangle(0,0,900,600,(Color){0,0,0,100});
 
         if (screen == SCREEN_MENU)
-        {  DrawText("Alege jocul", 280, 20, 60, BLACK);
+        {   
+            DrawTextEx(titlufont, "Simulator de zaruri", Vector2{ 230, 10 }, 48, 2, DARKGRAY); 
+            DrawTextEx(titlufont," si jocuri de noroc ",Vector2{230,50},48,2,DARKBLUE);
+            DrawTextEx(font, "Stoian Denis", Vector2{775,670},20,2,WHITE);
 
-            if (buton(b1, "Simulare zaruri"))
-            {
-                screen = SIMULARE_ZARURI;
-            };
-            if (buton(b2, "Probabilitate suma"))
-            {
-                screen = PROBABILITATE_SUMA;
-            };
-            if (buton(b3, "Joc Craps"))
-            {
-                screen = CRAPS;
-            };
-            if (buton(b4, "Joc Yahtzee")) 
-            {
-                screen = YAHTZEE;
-            };
-            if (buton(b5, "Statistici zaruri"))
-            {
-                screen = STATISTICI_ZARURI;
-            };
-            if (buton(b6, "Salvare log"))
-            {
-                screen = SALVARE_LOG;
-            };
-            if (buton(b7, "Histograma"))
-            {
-                screen = HISTOGRAMA;
-            };
-            if (buton(b8, "Comparatie"))
-            {
-                screen = COMPARATIE_PROB_TEORICE;
-            };
+            if (buton(b1, "Simulare zaruri")) screen = SIMULARE_ZARURI;
+            if (buton(b2, "Probabilitate suma")) screen = PROBABILITATE_SUMA;
+            if (buton(b3, "Joc Craps")) screen = CRAPS;
+            if (buton(b4, "Joc Yahtzee")) screen = YAHTZEE;
+            if (buton(b5, "Statistici zaruri")) screen = STATISTICI_ZARURI;
+            if (buton(b6, "Salvare log")) screen = SALVARE_LOG;
+            if (buton(b7, "Histograma")) screen = HISTOGRAMA;
+            if (buton(b8, "Comparatie")) screen = COMPARATIE_PROB_TEORICE;
         }
+
         if (screen == SIMULARE_ZARURI)
         {
-            DrawText("Simulare Zaruri", 230, 40, 60, BLACK);
-            DrawText(TextFormat("Rezultat: %d", rezultat), 450-125, 270, 40, BLACK);
-            DrawText(TextFormat("Numar zaruri: %d", numar_aruncari), 300, 100, 40, BLACK);
-            DrawText(TextFormat("Fete zaruri: %d", fete), 300, 150, 40, BLACK);
-            
-            if (buton(rollAdd, "+"))
-                numar_aruncari++;
+            DrawTextEx(titlufont, "Simulare Zaruri", {220,20}, 60, 2, WHITE);
+            DrawTextEx(font, TextFormat("Rezultat: %d", rezultat), {365, 200}, 40, 2, WHITE);
+            DrawTextEx(font, TextFormat("Numar zaruri: %d", numar_aruncari), {300, 100}, 40, 2, WHITE);
+            DrawTextEx(font, TextFormat("Fete zaruri: %d", fete), {300, 150}, 40, 2, WHITE);
 
-            if (buton(rollSub, "-") && numar_aruncari>1)
-                numar_aruncari--;
-            
-            if (buton(faceAdd, "+"))
-                fete++;
-            
-            if (buton(faceSub, "-") && fete>2)
-                fete--;
-
-            if (buton(rollBtn, "Da cu zarurile"))
-                SimulareZaruri(numar_aruncari,fete);
-
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
+            if (buton(rollAdd, " +")) numar_aruncari++;
+            if (buton(rollSub, " -") && numar_aruncari>1) numar_aruncari--;
+            if (buton(face6, " 6")) fete=6;
+            if (buton(face8, " 8")) fete=8;
+            if (buton(face10, "10")) fete=10;
+            if (buton(face12, "12")) fete=12;
+            if (buton(face20, "20")) fete=20;
+            if (buton(rollBtn, "Da cu zarurile")) SimulareZaruri(numar_aruncari,fete);
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
+
         if (screen == PROBABILITATE_SUMA) 
         {
-            DrawText("Calcularea Probabilitati \n           Sumei",220,40,50,BLACK);
-            DrawText(TextFormat("Numar zaruri:%d", numar_aruncari), 300, 200, 40, BLACK);
-            DrawText(TextFormat("Fete zaruri:%d", fete), 300, 150, 40, BLACK);
-            DrawText(TextFormat("Suma Dorita:%d",sumadorita),300,250,40,BLACK);
-            DrawText(TextFormat("Probabilitatea Sumei: %.4f",probabilitate),200,350,40,BLACK);
+            DrawTextEx(titlufont, "Probabilitate Suma", {180,20}, 60, 2, WHITE);
+            DrawTextEx(font, TextFormat("Numar zaruri: %d", numar_aruncari), {300, 100}, 40, 2, WHITE);
+            DrawTextEx(font, TextFormat("Fete zaruri: %d", fete), {300, 150}, 40, 2, WHITE);
+            DrawTextEx(font, TextFormat("Suma Dorita: %d",sumadorita), {300, 200}, 40, 2, WHITE);
+            DrawTextEx(font, TextFormat("   Probabilitate: %.4f",probabilitate), {200, 250}, 40, 2, WHITE);
 
-            if (buton(prob,"Ccalculeaza probabilitatea"))
-            {
+            if (buton(prob,"Calculeaza probabilitatea"))
                 probabilitate=calculareaprobabilitatii(numar_aruncari,fete,sumadorita);
-            }
-            if (buton(rolAdd, "+"))
-                numar_aruncari++;
-            if (buton(rolSub, "-") && numar_aruncari>1)
-                numar_aruncari--;
-            if (buton(sumAdd,"+"))
-                sumadorita++;
-            if (buton(sumSub,"-"))
-                sumadorita--;
-            if (buton(faceAdd,"+"))
-                fete++;
-            if (buton(faceSub, "-"))
-                fete--;
 
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
+            if (buton(rollAdd, "+")) numar_aruncari++;
+            if (buton(rollSub, "-") && numar_aruncari>1) numar_aruncari--;
+            if (buton(sumAdd,"+")) sumadorita++;
+            if (buton(sumSub,"-")) sumadorita--;
+            if (buton(face6," 6")) fete=6;
+            if (buton(face8," 8")) fete=8;
+            if (buton(face10,"10")) fete=10;
+            if (buton(face12,"12")) fete=12;
+            if (buton(face20,"20")) fete=20;
+
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
-        if (screen == CRAPS)
-        {
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
-            // Implementare ecran Craps
-        }
-        if (screen == YAHTZEE)
-        {
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
-            // Implementare ecran Yahtzee
-        }
-        if (screen == STATISTICI_ZARURI)
-        {
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
-            // Implementare ecran Statistici Zaruri
-        }
+
         if (screen == SALVARE_LOG)
         {
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
-            // Implementare ecran Salvare Log
+            DrawTextEx(titlufont, "Salvare Log", {300,20}, 60, 2, WHITE);
+            DrawTextEx(font, "Apasa butonul de mai jos pentru a salva log-ul aruncarilor intr-un fisier text.", {50,150}, 30, 2, WHITE);
+
+            if (buton(rollBtn,"Salveaza Log"))
+            {
+                FILE *f = fopen("log_zaruri.txt", "w");
+                if (f == NULL)
+                {
+                    DrawTextEx(font, "Eroare la deschiderea fisierului!", {200,300}, 30, 2, RED);
+                }
+                else
+                {
+                    for (int i = 0; i < countrezultat; i++)
+                    {
+                        fprintf(f, "Aruncarea %d: %d\n", i + 1, rezultatzar[i]);
+                    }
+                    fclose(f);
+                }
+            }
+
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
-        if (screen == HISTOGRAMA)
+
+        if (screen == CRAPS || screen == YAHTZEE || screen == STATISTICI_ZARURI ||
+             screen == HISTOGRAMA || screen == COMPARATIE_PROB_TEORICE)
         {
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
-            // Implementare ecran Histograma
-        }
-        if (screen == COMPARATIE_PROB_TEORICE)
-        {
-            if (buton(backBtn, "<- Inapoi"))
-                screen = SCREEN_MENU;
-            // Implementare ecran Comparatie Probabilitati Teoretice
+            DrawTextEx(font, "Functia nu e implementata inca", {200,300}, 40, 2, WHITE);
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
 
         EndDrawing();
     }
+
     UnloadTexture(texture);
+    UnloadFont(font);
+    UnloadFont(titlufont);
     CloseWindow();
     return 0;
 }
