@@ -13,7 +13,7 @@ int numar_aruncari=2;
 int sumadorita;
 float probabilitate;
 
-int rezultatzar[1000];
+int rezultatzar[100000];
 int countrezultat=0;
 
 int ultimezaruri[100];
@@ -215,8 +215,15 @@ void statisticiZaruri()
         deviatia = sqrt (deviatia / countrezultat);
     }
 }
-void salvareLog() { printf("Salvare log\n"); }
-void histograma() { printf("Histograma\n"); }
+void histograma() 
+{
+    int maxFreq = 0;
+    for (int i=0;i<20;i++)
+    {
+        if (frecventa[i]>maxFreq)
+            maxFreq=frecventa[i];
+    }
+}
 void comparatieProbTeoretice() { printf("Comparatie probabilitati teoretice\n"); }
 
 int main()
@@ -248,6 +255,8 @@ int main()
     Rectangle rollBtn2 = { 450-125, 400, 250, 50 };
     Rectangle backBtn = { 20, 20, 150, 50 };
 
+    Rectangle add100 = { 775, 100, 40, 40 };
+    Rectangle sub100 = { 725, 100, 40, 40 };
     Rectangle rollAdd= { 675, 100, 40, 40 };
     Rectangle rollSub= { 625, 100, 40, 40 };
     Rectangle face6= { 585, 150, 40, 40 };
@@ -262,6 +271,7 @@ int main()
 
     Rectangle resetc={ 450-125, 370, 250, 50 };
     Rectangle resety={ 450-125, 470, 250, 50 };
+    Rectangle clearlog={450-125,240,250,50};
 
 
 
@@ -297,6 +307,8 @@ int main()
 
             if (buton(rollAdd, " +")) numar_aruncari++;
             if (buton(rollSub, " -") && numar_aruncari>1) numar_aruncari--;
+            if (buton(add100, "++")) numar_aruncari+=100;
+            if (buton(sub100, "--") && numar_aruncari>100) numar_aruncari-=100;
             if (buton(face6, " 6")) fete=6;
             if (buton(face8, " 8")) fete=8;
             if (buton(face10, "10")) fete=10;
@@ -349,6 +361,13 @@ int main()
                     }
                     fclose(f);
                 }
+            }
+
+            if (buton(clearlog, "Sterge Log"))
+            {
+                FILE *f = fopen("log_zaruri.txt", "w");
+                if (f != NULL)
+                    fclose(f);
             }
 
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
@@ -440,6 +459,65 @@ int main()
             histograma();
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
+        if (screen == HISTOGRAMA)
+        {
+            statisticiZaruri();
+            DrawTextEx(titlufont, "Histograma Zaruri", {250,20}, 60, 2, WHITE);
+            DrawTextEx(font,"Histograma aruncarilor de zaruri:", {50,100}, 30, 2, WHITE);
+
+            for(int i=0 ;i<fete;i++)
+            {
+                DrawTextEx(font,TextFormat("%2d |",i+1),{50,(float)150 + i*25},20,2,WHITE);
+
+                for (int j=0;j<int(frecventa[i]);j+=1)
+                {
+                    if (int(frecventa[i]) < 80)
+                    {
+                        DrawRectangle(120 + j*10, 150 + i*25, 8, 20, BLUE);
+                    }
+                }
+
+                if (int(frecventa[i]) >= 80)
+                {
+                    DrawTextEx(font,TextFormat("(%d)",int(frecventa[i])),
+                               {120, (float)(150 + i*25)},20,2,WHITE);
+                }
+            }
+            histograma();
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
+        }
+
+        if (screen == COMPARATIE_PROB_TEORICE)
+        {
+            statisticiZaruri();
+            DrawTextEx(font,TextFormat("%d aruncari de zaruri cu %d fete",countrezultat,fete),
+                    (Vector2){250,80},30,2,WHITE);
+
+            DrawTextEx(titlufont, "Comparatie probabilitati",
+                    (Vector2){170, 20}, 60, 2, WHITE);
+
+            DrawTextEx(font,
+                "Val | P teoretica | P experimentala",
+                (Vector2){120, 120}, 30, 2, WHITE);
+
+            double p_teoretica = 1.0 / fete;
+
+            for (int i = 0; i < fete; i++)
+            {
+                double p_experimentala = 0;
+                if (countrezultat > 0)
+                    p_experimentala = frecventa[i] / countrezultat;
+
+                DrawTextEx(font,
+                    TextFormat(" %2d  |          %.4f   |         %.4f",
+                            i + 1, p_teoretica, p_experimentala),
+                    (Vector2){120, (float)(150 + i * 25)},
+                    25, 2, WHITE);
+            }
+
+            if (buton(backBtn, "<- Inapoi"))screen = SCREEN_MENU;
+        }
+
         EndDrawing();
     }
 
