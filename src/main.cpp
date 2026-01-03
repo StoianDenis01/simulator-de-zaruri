@@ -18,7 +18,13 @@ int countrezultat=0;
 int ultimezaruri[100];
 int ultimecount=0;
 
-// Buton modernizat
+int zar1 = 0, zar2 = 0;
+int punct1=0;
+int punct2=0;
+int rezultatcraps1=0;
+int rezultatcraps2=0;
+
+// buton
 bool buton(Rectangle rec, const char *text)
 {
     Vector2 mouse = GetMousePosition();
@@ -29,8 +35,7 @@ bool buton(Rectangle rec, const char *text)
     DrawRectangleRounded(rec, 0.2f, 30, col);
     DrawRectangleRoundedLines(rec, 0.2f, 30, WHITE);
 
-    // text centrat
-    int fontSize = 30; // dimensiunea textului pe buton
+    int fontSize = 30;
     Vector2 textSize = MeasureTextEx(font, text, fontSize, 2);
     DrawTextEx(font, text, 
                { rec.x +rec.width/20 - textSize.x/2, rec.y + rec.height/4 - textSize.y/2 },
@@ -88,7 +93,33 @@ float calculareaprobabilitatii(int zaruri,int fete,int sumadorita)
     return (float)combinatiifavorabile/totalcombinatii;
 }
 
-void Craps() { printf("Joc Craps\n"); }
+void Craps(int *punct, int *rezultatcraps, int *z1, int *z2)
+{
+    *z1 = rand() % 6 + 1;
+    *z2 = rand() % 6 + 1;
+    int suma = *z1 + *z2;
+
+    if (*punct ==0){
+        if(suma==7 ||suma ==11)
+            *rezultatcraps=1;
+            else if(suma ==2 ||suma ==3 || suma ==12)
+            *rezultatcraps=-1;
+            else{
+                *punct=suma;
+                *rezultatcraps=0;
+            }
+    }else{
+        if(suma==*punct){
+            *rezultatcraps=1;
+            *punct=0;
+        }
+        else if (suma==7){
+            *rezultatcraps=-1;
+            *punct=0;
+        }
+        else *rezultatcraps=0;
+    }
+}
 void yahtzee() { printf("Joc Yahtzee\n"); }
 void statisticiZaruri() { printf("Statistici zaruri\n"); }
 void salvareLog() { printf("Salvare log\n"); }
@@ -120,7 +151,7 @@ int main()
     Rectangle b7 = { 450-92, 490, 185, 50 };
     Rectangle b8 = { 450-90, 555, 180, 50 };
 
-    Rectangle rollBtn = { 450-125, 300, 250, 60 };
+    Rectangle rollBtn = { 450-125, 300, 250, 50 };
     Rectangle backBtn = { 20, 20, 150, 50 };
 
     Rectangle rollAdd= { 675, 100, 40, 40 };
@@ -135,12 +166,14 @@ int main()
     Rectangle sumAdd = {675,200,40,40};
     Rectangle sumSub = {625,200,40,40};
 
+    Rectangle reset={ 450-125, 370, 250, 50 };
+
+
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-
-        // Fundal imagine + overlay
         DrawTexture(texture, 0, 0, WHITE);
         DrawRectangle(0,0,900,600,(Color){0,0,0,100});
 
@@ -198,7 +231,6 @@ int main()
             if (buton(face10,"10")) fete=10;
             if (buton(face12,"12")) fete=12;
             if (buton(face20,"20")) fete=20;
-
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
 
@@ -227,11 +259,34 @@ int main()
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
 
-        if (screen == CRAPS || screen == YAHTZEE || screen == STATISTICI_ZARURI ||
-             screen == HISTOGRAMA || screen == COMPARATIE_PROB_TEORICE)
-        {
-            DrawTextEx(font, "Functia nu e implementata inca", {200,300}, 40, 2, WHITE);
+        if (screen == CRAPS){
+            DrawTextEx(titlufont, "Joc Craps", {300,20}, 60, 2, WHITE);
+            DrawTextEx(font, "Reguli:", Vector2{400,430},40,2,WHITE);
+            DrawTextEx(font,"Se arunca 2 zaruri.\n Prima aruncare:\n 7 sau 11 castig\n 2, 3, 12 pierdere\n 4,5,6,8,9,10 devine Punct",Vector2 {100,480},30,2,WHITE);
+            DrawTextEx(font,"Dupa Punct:\n Punct  castig \n 7 pierdere",Vector2 {500,480},30,2,WHITE);
+
+            DrawTextEx(font, TextFormat("Zaruri: %d + %d", zar1, zar2),
+                    {350, 120}, 40, 2, WHITE);
+
+            DrawTextEx(font, TextFormat("Punct curent: %d", punct1),
+                    {350, 170}, 40, 2, WHITE);
+
+            if (rezultatcraps1 == 0)
+                DrawTextEx(font, "Stare joc: In desfasurare",
+                        {300, 220}, 40, 2, WHITE);
+            else if (rezultatcraps1 == 1)
+                DrawTextEx(font, "Stare joc: Ai castigat!",
+                        {300, 220}, 40, 2, GREEN);
+            else
+                DrawTextEx(font, "Stare joc: Ai pierdut!",
+                        {300, 220}, 40, 2, RED);
+
+            if (buton(rollBtn, "Arunca zarurile") && rezultatcraps1 == 0)
+                Craps(&punct1, &rezultatcraps1, &zar1, &zar2);
+
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
+
+            if (buton(reset,"Reset")) rezultatcraps1 = 0;
         }
 
         EndDrawing();
