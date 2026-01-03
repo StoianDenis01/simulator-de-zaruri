@@ -24,6 +24,12 @@ int punct2=0;
 int rezultatcraps1=0;
 int rezultatcraps2=0;
 
+int zarY[5] = {0,0,0,0,0};
+int pastratY[5] = {0,0,0,0,0};
+int aruncariY = 0;
+int stareY = 0;
+int scorY = 0;
+
 // buton
 bool buton(Rectangle rec, const char *text)
 {
@@ -120,7 +126,49 @@ void Craps(int *punct, int *rezultatcraps, int *z1, int *z2)
         else *rezultatcraps=0;
     }
 }
-void yahtzee() { printf("Joc Yahtzee\n"); }
+void aruncareyahtzee()
+{
+    if (aruncariY >=3 )return;
+    for (int i=0;i<5;i++)
+    {
+        if (pastratY[i]==0)
+        {
+            zarY[i]=rand()%6+1;
+        }
+    }
+    aruncariY++;
+}
+void resetareyahtzee()
+{
+    for (int i=0;i<5;i++)
+    {
+        pastratY[i]=0;
+        zarY[i]=0;
+    }
+    aruncariY=0;
+    stareY=0;
+}
+void CalculeazaScorYahtzee()
+{
+    scorY = 0;
+    for (int i = 0; i < 5; i++)
+        scorY += zarY[i];
+
+    int toateEgale = 1;
+    for (int i = 1; i < 5; i++)
+    {
+        if (zarY[i] != zarY[0])
+        {
+            toateEgale = 0;
+            break;
+        }
+    }
+    if (toateEgale)
+    {
+        scorY = 50;
+    }
+}
+
 void statisticiZaruri() { printf("Statistici zaruri\n"); }
 void salvareLog() { printf("Salvare log\n"); }
 void histograma() { printf("Histograma\n"); }
@@ -142,16 +190,17 @@ int main()
 
     ScreenState screen = SCREEN_MENU;
 
-    Rectangle b1 = { 450-125, 100, 250, 50};
-    Rectangle b2 = { 450-150, 165, 300, 50 };
-    Rectangle b3 = { 450-90, 230, 180, 50 };
-    Rectangle b4 = { 450-105, 295, 210, 50 };
-    Rectangle b5 = { 450-135, 360, 270, 50 };
-    Rectangle b6 = { 450-97, 425, 195, 50 };
-    Rectangle b7 = { 450-92, 490, 185, 50 };
-    Rectangle b8 = { 450-90, 555, 180, 50 };
+    Rectangle b1 = { 450-150, 120, 300, 50};
+    Rectangle b2 = { 450-150, 185, 300, 50 };
+    Rectangle b3 = { 450-150, 250, 300, 50 };
+    Rectangle b4 = { 450-150, 315, 300, 50 };
+    Rectangle b5 = { 450-150, 380, 300, 50 };
+    Rectangle b6 = { 450-150, 445, 300, 50 };
+    Rectangle b7 = { 450-150, 510, 300, 50 };
+    Rectangle b8 = { 450-150, 575, 300, 50 };
 
     Rectangle rollBtn = { 450-125, 300, 250, 50 };
+    Rectangle rollBtn2 = { 450-125, 400, 250, 50 };
     Rectangle backBtn = { 20, 20, 150, 50 };
 
     Rectangle rollAdd= { 675, 100, 40, 40 };
@@ -166,7 +215,8 @@ int main()
     Rectangle sumAdd = {675,200,40,40};
     Rectangle sumSub = {625,200,40,40};
 
-    Rectangle reset={ 450-125, 370, 250, 50 };
+    Rectangle resetc={ 450-125, 370, 250, 50 };
+    Rectangle resety={ 450-125, 470, 250, 50 };
 
 
 
@@ -183,14 +233,14 @@ int main()
             DrawTextEx(titlufont," si jocuri de noroc ",Vector2{230,50},48,2,DARKBLUE);
             DrawTextEx(font, "Stoian Denis", Vector2{775,670},20,2,WHITE);
 
-            if (buton(b1, "Simulare zaruri")) screen = SIMULARE_ZARURI;
+            if (buton(b1, "  Simulare zaruri")) screen = SIMULARE_ZARURI;
             if (buton(b2, "Probabilitate suma")) screen = PROBABILITATE_SUMA;
-            if (buton(b3, "Joc Craps")) screen = CRAPS;
-            if (buton(b4, "Joc Yahtzee")) screen = YAHTZEE;
-            if (buton(b5, "Statistici zaruri")) screen = STATISTICI_ZARURI;
-            if (buton(b6, "Salvare log")) screen = SALVARE_LOG;
-            if (buton(b7, "Histograma")) screen = HISTOGRAMA;
-            if (buton(b8, "Comparatie")) screen = COMPARATIE_PROB_TEORICE;
+            if (buton(b3, "     Joc Craps")) screen = CRAPS;
+            if (buton(b4, "    Joc Yahtzee")) screen = YAHTZEE;
+            if (buton(b5, "  Statistici zaruri")) screen = STATISTICI_ZARURI;
+            if (buton(b6, "     Salvare log")) screen = SALVARE_LOG;
+            if (buton(b7, "     Histograma")) screen = HISTOGRAMA;
+            if (buton(b8, "     Comparatie")) screen = COMPARATIE_PROB_TEORICE;
         }
 
         if (screen == SIMULARE_ZARURI)
@@ -286,9 +336,57 @@ int main()
 
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
 
-            if (buton(reset,"Reset")) rezultatcraps1 = 0;
+            if (buton(resetc,"Reset")) rezultatcraps1 = 0;
         }
+        if (screen == YAHTZEE)
+        {
+            DrawTextEx(titlufont, "Joc Yahtzee", {280,20}, 60, 2, WHITE);
+            DrawTextEx(font, TextFormat("Scor: %d", scorY), {400,100}, 40, 2, WHITE);
 
+            for (int i=0;i<5;i++)
+            {
+                DrawRectangle(90 + i*150, 150, 130, 130, LIGHTGRAY);
+                DrawRectangleLines(90 + i*150, 150, 130, 130, BLACK);
+                if (zarY[i]!=0)
+                {
+                    DrawTextEx(font, TextFormat("%d", zarY[i]),
+                               { (float)(150 + (i*150)), 200 }, 40, 2, DARKBLUE);
+                }
+
+                Rectangle btnPastrat = {(float)(110 + i*150), 300, 90, 40};
+                if (buton(btnPastrat, pastratY[i] ? "  Da" : " Tine"))
+                {
+                    pastratY[i] = !pastratY[i];
+                }
+            }
+
+            DrawTextEx(font,
+                TextFormat("Aruncari: %d / 3", aruncariY),
+                {300, 350}, 35, 2, WHITE);
+            if (aruncariY > 0)
+                CalculeazaScorYahtzee();
+
+            if (buton(rollBtn2, "Arunca zarurile"))
+                aruncareyahtzee();
+
+            if (buton(resety, "      Reset"))
+                resetareyahtzee();
+
+            if (buton(backBtn, "<- Inapoi"))
+                screen = SCREEN_MENU;
+
+
+        }
+        if (screen == STATISTICI_ZARURI)
+        {
+            statisticiZaruri();
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
+        }
+        if (screen == HISTOGRAMA)
+        {
+            histograma();
+            if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
+        }
         EndDrawing();
     }
 
