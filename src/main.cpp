@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 Font font;
 Font titlufont;
@@ -17,6 +18,11 @@ int countrezultat=0;
 
 int ultimezaruri[100];
 int ultimecount=0;
+
+double frecventa[20];
+double medie = 0;
+double mediana = 0;
+double deviatia = 0;
 
 int zar1 = 0, zar2 = 0;
 int punct1=0;
@@ -169,7 +175,46 @@ void CalculeazaScorYahtzee()
     }
 }
 
-void statisticiZaruri() { printf("Statistici zaruri\n"); }
+void statisticiZaruri()
+{
+    if (countrezultat ==0) return ;
+
+    int tempfrecventa[20] = {0};
+    int i;
+    double suma =0;
+    for (i=0;i<countrezultat;i++)
+    {
+        tempfrecventa[rezultatzar[i]-1]++;
+        suma += rezultatzar[i];
+    }
+    for (i=0;i<20;i++)
+    {
+        frecventa[i]=(double)tempfrecventa[i];
+    }
+
+    medie = suma / countrezultat;
+    
+        int temp[countrezultat];
+    for (i = 0; i < countrezultat; i++) temp[i] = rezultatzar[i];
+    for (i = 0; i < countrezultat-1; i++) {
+        for (int j = 0; j < countrezultat-i-1; j++) {
+            if (temp[j] > temp[j+1]) {
+                int t = temp[j]; temp[j] = temp[j+1]; temp[j+1] = t;
+            }
+        }
+    }
+    if (countrezultat % 2 == 0)
+        mediana = (temp[countrezultat/2 -1] + temp[countrezultat/2]) / 2.0;
+    else
+        mediana = temp[countrezultat/2];
+    
+    deviatia =0;
+    for (i=0;i<countrezultat;i++)
+    {
+        deviatia += (rezultatzar[i]-medie)*(rezultatzar[i]-medie);
+        deviatia = sqrt (deviatia / countrezultat);
+    }
+}
 void salvareLog() { printf("Salvare log\n"); }
 void histograma() { printf("Histograma\n"); }
 void comparatieProbTeoretice() { printf("Comparatie probabilitati teoretice\n"); }
@@ -380,6 +425,14 @@ int main()
         if (screen == STATISTICI_ZARURI)
         {
             statisticiZaruri();
+            DrawTextEx(titlufont, "Statistici Zaruri", {220,20}, 60, 2, WHITE);
+            DrawTextEx(font, TextFormat("Numar total aruncari: %d", countrezultat), {300, 100}, 40, 2, WHITE);
+            DrawTextEx(font, "Statistici calculate:", {50,250}, 30, 2, WHITE);
+            DrawTextEx(font, TextFormat("Medie: %.2f", medie), {50,300}, 30, 2, WHITE);
+            DrawTextEx(font, TextFormat("Mediana: %.2f", mediana), {50,350}, 30, 2, WHITE);
+            DrawTextEx(font, TextFormat("Deviatia standard: %.2f", deviatia), {50,400}, 30, 2, WHITE);
+            DrawTextEx(font,TextFormat ("Frecventa: %.2f", frecventa[0]),{50,450},30,2,WHITE);
+
             if (buton(backBtn, "<- Inapoi")) screen = SCREEN_MENU;
         }
         if (screen == HISTOGRAMA)
