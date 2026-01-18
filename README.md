@@ -36,7 +36,7 @@ Navigarea între ecrane se face prin butoane grafice.
 7. Histogramă  
 8. Comparație probabilități  
 
-![Meniu Principal](assets/meniu_principal.png)
+![Meniu Principal](assets/meniu_princpal.png)
 
 ---
 
