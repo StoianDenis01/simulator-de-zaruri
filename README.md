@@ -155,14 +155,14 @@ Aceste statistici ajută la analiza distribuției rezultatelor.
 Din directorul principal al proiectului, se rulează comanda:
 
 ```bash
+##  Construirea imaginii
+
 docker build -t dice_game .
 
-## Construirea imaginii Docker
+## Pornirea imaginii Docker
 
-```bash
 docker run -p 8000:80 dice_game 
 
-##  Deschiderea aplicatiei pe web
+##  Deschiderea imaginii pe web
 
-```bash
 http://localhost:8000/dice_game.html
