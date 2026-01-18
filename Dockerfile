@@ -59,6 +59,6 @@ COPY --from=build /build/assets /usr/share/nginx/html/assets
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
-# Build: docker build -t test_game .
-# Run: docker run -p 8000:80 test_game 
-# Open: http://localhost:8000/test_game.html      
+# Build: docker build -t dice_game .
+# Run: docker run -p 8000:80 dice_game 
+# Open: http://localhost:8000/dice_game.html      
