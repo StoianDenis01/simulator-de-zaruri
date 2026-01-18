@@ -1,4 +1,4 @@
-# 🎲 Simulator de Zaruri și Jocuri de Noroc
+# Simulator de Zaruri și Jocuri de Noroc
 
 **Autor:** Stoian Denis  
 **Limbaj:** C  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📌 Descriere generală
+## Descriere generală
 
 Acest program este o aplicație grafică realizată în limbajul **C**, folosind biblioteca **raylib**, care simulează aruncarea zarurilor și implementează mai multe jocuri de noroc și analize statistice.
 
@@ -21,7 +21,7 @@ Scopul principal al programului este:
 
 ---
 
-## 🖥️ Structura aplicației
+## Structura aplicației
 
 Programul este organizat sub forma unor **ecrane (screens)**, controlate de un meniu principal.  
 Navigarea între ecrane se face prin butoane grafice.
@@ -38,9 +38,9 @@ Navigarea între ecrane se face prin butoane grafice.
 
 ---
 
-## 🎯 Funcționalități
+## Funcționalități
 
-### 1️⃣ Simulare Zaruri
+### 1️ Simulare Zaruri
 - Utilizatorul poate alege:
   - numărul de zaruri
   - numărul de fețe ale zarurilor (6, 8, 10, 12, 20)
@@ -51,7 +51,7 @@ Navigarea între ecrane se face prin butoane grafice.
 
 ---
 
-### 2️⃣ Probabilitate Suma
+### 2️ Probabilitate Suma
 - Calculează **probabilitatea teoretică** de a obține o anumită sumă
 - Se ține cont de:
   - numărul de zaruri
@@ -61,7 +61,7 @@ Navigarea între ecrane se face prin butoane grafice.
 
 ---
 
-### 3️⃣ Joc Craps
+### 3️ Joc Craps
 - Implementare a jocului de noroc **Craps**
 - Reguli:
   - Prima aruncare:
@@ -75,7 +75,7 @@ Navigarea între ecrane se face prin butoane grafice.
 
 ---
 
-### 4️⃣ Joc Yahtzee
+### 4️ Joc Yahtzee
 - Joc cu 5 zaruri
 - Maxim 3 aruncări
 - Utilizatorul poate:
@@ -87,7 +87,7 @@ Navigarea între ecrane se face prin butoane grafice.
 
 ---
 
-### 5️⃣ Statistici Zaruri
+### 5️ Statistici Zaruri
 Pe baza tuturor aruncărilor realizate în aplicație se calculează:
 - **Media**
 - **Mediana**
@@ -98,7 +98,7 @@ Aceste statistici ajută la analiza distribuției rezultatelor.
 
 ---
 
-### 6️⃣ Salvare Log
+### 6️ Salvare Log
 - Toate aruncările sunt salvate într-un fișier text `log_zaruri.txt`
 - Fiecare linie conține:
   - numărul aruncării
@@ -107,14 +107,14 @@ Aceste statistici ajută la analiza distribuției rezultatelor.
 
 ---
 
-### 7️⃣ Histogramă
+### 7️ Histogramă
 - Reprezentare grafică a frecvenței apariției valorilor
 - Fiecare valoare este afișată sub formă de bară
 - Permite observarea vizuală a distribuției rezultatelor
 
 ---
 
-### 8️⃣ Comparație Probabilități
+### 8️ Comparație Probabilități
 - Compară:
   - probabilitatea **teoretică** (1 / număr de fețe)
   - probabilitatea **experimentală** (obținută din simulări)
@@ -122,7 +122,7 @@ Aceste statistici ajută la analiza distribuției rezultatelor.
 
 ---
 
-## 🧠 Aspecte tehnice
+##  Aspecte tehnice
 
 - Generarea numerelor aleatoare se face cu `rand()`
 - Rezultatele sunt stocate în vectori
