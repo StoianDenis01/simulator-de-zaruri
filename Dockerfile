@@ -61,4 +61,4 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # Build: docker build -t dice_game .
 # Run: docker run -p 8000:80 dice_game 
-# Open: http://localhost:8000/dice_game.html      
+# Open: http://localhost:8000/dice_game.html
