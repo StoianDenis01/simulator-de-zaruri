@@ -51,6 +51,8 @@ Navigarea între ecrane se face prin butoane grafice.
   - se calculează suma zarurilor
   - rezultatele sunt salvate pentru analize ulterioare
 
+  ![Meniu Simulare Zaruri](assets/m_simulatorzaruri.png)
+
 ---
 
 ### 2️ Probabilitate Suma
@@ -60,6 +62,8 @@ Navigarea între ecrane se face prin butoane grafice.
   - numărul de fețe
   - suma dorită
 - Probabilitatea este calculată matematic, folosind combinații posibile
+
+![Meniu Probabilitatea Sumei](assets/m_probsuma.png)
 
 ---
 
@@ -75,6 +79,8 @@ Navigarea între ecrane se face prin butoane grafice.
     - 7 → pierdere
 - Jocul afișează starea curentă a jocului
 
+![Meniu Joc Craps](assets/m_joccraps.png)
+
 ---
 
 ### 4️ Joc Yahtzee
@@ -87,6 +93,8 @@ Navigarea între ecrane se face prin butoane grafice.
   - suma zarurilor
   - **Yahtzee (toate zarurile egale) → 50 puncte**
 
+![Meniu Joc Yahtzee](assets/m_jocyahtzee.png)
+
 ---
 
 ### 5️ Statistici Zaruri
@@ -98,6 +106,8 @@ Pe baza tuturor aruncărilor realizate în aplicație se calculează:
 
 Aceste statistici ajută la analiza distribuției rezultatelor.
 
+![Meniu Statistici Zaruri](assets/m_statisticizar.png)
+
 ---
 
 ### 6️ Salvare Log
@@ -107,12 +117,16 @@ Aceste statistici ajută la analiza distribuției rezultatelor.
   - valoarea obținută
 - Există opțiunea de ștergere a fișierului log
 
+![Meniu Salvare Log](assets/m_salvarelog.png)
+
 ---
 
 ### 7️ Histogramă
 - Reprezentare grafică a frecvenței apariției valorilor
 - Fiecare valoare este afișată sub formă de bară
 - Permite observarea vizuală a distribuției rezultatelor
+
+![Meniu Histograma](assets/m_histograma.png)
 
 ---
 
@@ -121,6 +135,8 @@ Aceste statistici ajută la analiza distribuției rezultatelor.
   - probabilitatea **teoretică** (1 / număr de fețe)
   - probabilitatea **experimentală** (obținută din simulări)
 - Demonstrează apropierea rezultatelor experimentale de cele teoretice
+
+![Meniu Comparatie Statistici](assets/m_comparatieprob.png)
 
 ---
 
